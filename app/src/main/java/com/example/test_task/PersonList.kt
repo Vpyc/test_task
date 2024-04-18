@@ -1,6 +1,7 @@
 package com.example.test_task
 
 import com.github.javafaker.Faker
+import java.util.Collections
 import java.util.Locale
 
 
@@ -12,6 +13,7 @@ class PersonList {
 
         persons = (1..100).map {
             Person(
+                id = it.toLong(),
                 firstname = faker.name().firstName(),
                 lastname = faker.name().lastName(),
                 company = faker.company().name(),
@@ -30,4 +32,34 @@ class PersonList {
             "https://get.wallhere.com/photo/face-cat-Asian-wildlife-fur-nose-kittens-whiskers-wild-cat-Iris-eye-cats-kitten-fauna-mammal-organ-close-up-cat-like-mammal-macro-photography-snout-small-to-medium-sized-cats-carnivoran-tabby-cat-domestic-short-haired-cat-bengal-somali-puss-1152x804-px-lovely-desktop-images-cat-images-cat-photos-cat-wallpapers-cutties-feline-pictures-on-the-wall-pussycats-aegean-cat-802659.jpg"
         )
     }
+    fun removePerson(person: Person) {
+        val position = persons.indexOfFirst { it.id == person.id }
+        if (position == -1) return
+        persons.removeAt(position)
+        notifyChanges()
+    }
+    fun movePerson(person: Person, moveBy: Int) {
+        val oldPosition = persons.indexOfFirst { it.id == person.id }
+        if (oldPosition == -1) return
+        val newPosition = oldPosition + moveBy
+        Collections.swap(persons, oldPosition, newPosition)
+        notifyChanges()
+    }
+    private var listeners = mutableListOf<PersonListener>() // Все слушатели
+
+    fun addListener(listener: PersonListener) {
+        listeners.add(listener)
+        listener.invoke(persons)
+
+    }
+
+    fun removeListener(listener: PersonListener) {
+        listeners.remove(listener)
+        listener.invoke(persons)
+    }
+
+    private fun notifyChanges() = listeners.forEach { it.invoke(persons) }
 }
+
+typealias PersonListener = (persons: List<Person>) -> Unit
+
