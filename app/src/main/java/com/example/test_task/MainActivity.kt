@@ -1,14 +1,18 @@
 package com.example.test_task
 
 import android.os.Bundle
+import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.test_task.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: PersonAdapter
+    private lateinit var switchTheme: SwitchCompat
     private val personList: PersonList
         get() = (applicationContext as App).personList
 
@@ -16,14 +20,34 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        switchTheme = binding.switch1;
+        switchTheme.isChecked = getSavedTheme()
+        switchTheme.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                setDarkTheme()
+            } else {
+                setLightTheme()
+            }
+            saveTheme(isChecked)
+            }
+        if (switchTheme.isChecked) {
+            setDarkTheme()
+        } else {
+            setLightTheme()
+        }
         val layoutManager = LinearLayoutManager(this)
         adapter = PersonAdapter(object : PersonActionListener {
             override fun onPersonGetId(person: Person) =
-                Toast.makeText(this@MainActivity, "${person.firstname}: ${person.company}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "${person.firstname}: ${person.company}",
+                    Toast.LENGTH_SHORT
+                ).show()
 
             override fun onPersonRemove(person: Person) = personList.removePerson(person)
 
-            override fun onPersonMove(person: Person, moveBy: Int) = personList.movePerson(person, moveBy)
+            override fun onPersonMove(person: Person, moveBy: Int) =
+                personList.movePerson(person, moveBy)
 
         })
         personList.addListener(listener)
@@ -31,5 +55,36 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
     }
-    private val listener: PersonListener = {adapter.data = it}
+
+    private val listener: PersonListener = { adapter.data = it }
+    private fun setLightTheme() {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+    }
+
+    private fun setDarkTheme() {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+    }
+
+    private fun getSavedTheme(): Boolean {
+        val sharedPreferences = getSharedPreferences("Theme", MODE_PRIVATE)
+        return sharedPreferences.getBoolean("IsDarkTheme", false)
+    }
+
+    private fun saveTheme(isDarkTheme: Boolean) {
+        val sharedPreferences = getSharedPreferences("Theme", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("IsDarkTheme", isDarkTheme)
+        editor.apply()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (getSavedTheme()) {
+            setDarkTheme()
+            switchTheme.isChecked = true
+        } else {
+            setLightTheme()
+            switchTheme.isChecked = false
+        }
+    }
 }
