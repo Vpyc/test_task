@@ -1,11 +1,11 @@
 package com.example.test_task
 
 import android.os.Bundle
-import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.test_task.databinding.ActivityMainBinding
 
@@ -16,11 +16,12 @@ class MainActivity : AppCompatActivity() {
     private val personList: PersonList
         get() = (applicationContext as App).personList
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        switchTheme = binding.switch1;
+        switchTheme = binding.switch1
         switchTheme.isChecked = getSavedTheme()
         switchTheme.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -59,10 +60,22 @@ class MainActivity : AppCompatActivity() {
     private val listener: PersonListener = { adapter.data = it }
     private fun setLightTheme() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        if(binding.recyclerView.itemDecorationCount > 0) {
+            binding.recyclerView.removeItemDecoration(binding.recyclerView.getItemDecorationAt(0))
+        }
+        val dividerItemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider_light))
+        binding.recyclerView.addItemDecoration(dividerItemDecoration)
     }
 
     private fun setDarkTheme() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        if(binding.recyclerView.itemDecorationCount > 0) {
+            binding.recyclerView.removeItemDecoration(binding.recyclerView.getItemDecorationAt(0))
+        }
+        val dividerItemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider_dark))
+        binding.recyclerView.addItemDecoration(dividerItemDecoration)
     }
 
     private fun getSavedTheme(): Boolean {
