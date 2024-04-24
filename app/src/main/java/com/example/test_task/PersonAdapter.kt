@@ -19,7 +19,7 @@ class PersonAdapter(private val personActionListener: PersonActionListener) :
     var data: List<Person> = emptyList()
         set(newValue) {
             field = newValue
-            notifyDataSetChanged()
+            notifyItemInserted(data.size)
         }
 
     class PersonViewHolder(val binding: ItemPersonBinding) : RecyclerView.ViewHolder(binding.root)
