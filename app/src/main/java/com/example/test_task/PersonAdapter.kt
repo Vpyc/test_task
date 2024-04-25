@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.test_task.databinding.ItemPersonBinding
@@ -18,8 +19,11 @@ class PersonAdapter(private val personActionListener: PersonActionListener) :
     RecyclerView.Adapter<PersonAdapter.PersonViewHolder>(), View.OnClickListener {
     var data: List<Person> = emptyList()
         set(newValue) {
-            field = newValue
-            notifyItemInserted(data.size)
+            val newData = newValue.toMutableList()
+            val personDiffUtil = PersonDiffUtilCallback(field, newData)
+            val personDiffUtilResult = DiffUtil.calculateDiff(personDiffUtil)
+            field = newData
+            personDiffUtilResult.dispatchUpdatesTo(this@PersonAdapter)
         }
 
     class PersonViewHolder(val binding: ItemPersonBinding) : RecyclerView.ViewHolder(binding.root)
