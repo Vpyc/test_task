@@ -1,6 +1,14 @@
 package com.example.test_task
 
+import com.example.test_task.retrofit.UsersApi
 import com.github.javafaker.Faker
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Collections
 import java.util.Locale
 
@@ -9,7 +17,30 @@ class PersonList {
     private var persons = mutableListOf<Person>()
 
     init {
-        val faker = Faker(Locale("ru"))
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        val client = OkHttpClient
+            .Builder()
+            .addInterceptor(interceptor).build()
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://dummyjson.com/").client(client)
+            .addConverterFactory(GsonConverterFactory.create()).build()
+        val usersAPI= retrofit.create(UsersApi::class.java)
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = usersAPI.getPersons(100
+                , "firstName,lastName,image,company,id")
+            val personsResponse = response.users
+            persons = personsResponse.map { user ->
+                Person(
+                    id = user.id,
+                    firstname = user.firstName,
+                    lastname = user.lastName,
+                    company = user.company.name,
+                    img = user.image
+                )
+            }.toMutableList()
+        }
+        /*val faker = Faker(Locale("ru"))
 
         persons = (1..100).map {
             Person(
@@ -19,7 +50,7 @@ class PersonList {
                 company = faker.company().name(),
                 img = SRC[it % SRC.size],
             )
-        }.toMutableList()
+        }.toMutableList()*/
     }
 
     fun getPersons(): List<Person> = persons
