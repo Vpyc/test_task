@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.DiffUtil
 class PersonDiffUtilCallback(
     private val oldList: List<Person>,
     private val newList: List<Person>
-):DiffUtil.Callback(){
+) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int = oldList.size
 

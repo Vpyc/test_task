@@ -2,12 +2,12 @@ package com.example.test_task.fragments
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.test_task.App
@@ -32,14 +32,11 @@ class ListFragment : Fragment() {
     private lateinit var binding: FragmentListBinding
 
     private lateinit var personList: PersonList
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentListBinding.inflate(inflater, container, false)
         personList = (requireActivity().application as App).personList
         return binding.root
@@ -71,6 +68,7 @@ class ListFragment : Fragment() {
             }
         }
     }
+
     private fun applyTheme() {
         if (themeManager.getSavedTheme(requireContext())) {
             setDarkTheme()
@@ -110,7 +108,10 @@ class ListFragment : Fragment() {
         if (binding.recyclerView.itemDecorationCount > 0) {
             binding.recyclerView.removeItemDecoration(binding.recyclerView.getItemDecorationAt(0))
         }
-        val dividerItemDecoration = DividerItemDecoration(this@ListFragment.requireActivity(), DividerItemDecoration.VERTICAL)
+        val dividerItemDecoration = DividerItemDecoration(
+            this@ListFragment.requireActivity(),
+            DividerItemDecoration.VERTICAL
+        )
         dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider_light))
         binding.recyclerView.addItemDecoration(dividerItemDecoration)
     }
@@ -120,7 +121,10 @@ class ListFragment : Fragment() {
         if (binding.recyclerView.itemDecorationCount > 0) {
             binding.recyclerView.removeItemDecoration(binding.recyclerView.getItemDecorationAt(0))
         }
-        val dividerItemDecoration = DividerItemDecoration(this@ListFragment.requireActivity(), DividerItemDecoration.VERTICAL)
+        val dividerItemDecoration = DividerItemDecoration(
+            this@ListFragment.requireActivity(),
+            DividerItemDecoration.VERTICAL
+        )
         dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider_dark))
         binding.recyclerView.addItemDecoration(dividerItemDecoration)
     }

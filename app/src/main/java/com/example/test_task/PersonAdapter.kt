@@ -15,6 +15,7 @@ interface PersonActionListener {
     fun onPersonRemove(person: Person)
     fun onPersonMove(person: Person, moveBy: Int)
 }
+
 class PersonAdapter(private val personActionListener: PersonActionListener) :
     RecyclerView.Adapter<PersonAdapter.PersonViewHolder>(), View.OnClickListener {
     var data: List<Person> = emptyList()
@@ -63,6 +64,7 @@ class PersonAdapter(private val personActionListener: PersonActionListener) :
             else -> personActionListener.onPersonGetId(person)
         }
     }
+
     private fun showPopupMenu(view: View) {
         val popupMenu = PopupMenu(view.context, view)
         val person = view.tag as Person

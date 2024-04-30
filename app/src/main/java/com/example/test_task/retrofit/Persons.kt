@@ -3,6 +3,7 @@ package com.example.test_task.retrofit
 data class Persons(
     val users: List<User>
 )
+
 data class User(
     val id: Int,
     val firstName: String,
@@ -10,6 +11,13 @@ data class User(
     val company: Company,
     val image: String
 )
+
 data class Company(
     val name: String
+)
+
+data class PostUser(
+    val firstName: String,
+    val lastName: String,
+    val age: Int
 )

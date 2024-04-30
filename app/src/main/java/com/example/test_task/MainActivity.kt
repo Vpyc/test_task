@@ -1,13 +1,9 @@
 package com.example.test_task
 
 import android.os.Bundle
-
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.test_task.databinding.ActivityMainBinding
 
@@ -32,6 +28,7 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.listFragment)
 
                 }
+
                 R.id.page_2 -> {
                     navController.navigate(R.id.postFragment)
                 }
@@ -43,26 +40,26 @@ class MainActivity : AppCompatActivity() {
         switchTheme.isChecked = themeManager.getSavedTheme(this)
         switchTheme.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                themeManager.setDarkTheme(this)
+                themeManager.setDarkTheme()
             } else {
-                themeManager.setLightTheme(this)
+                themeManager.setLightTheme()
             }
             themeManager.saveTheme(this, isChecked)
         }
         if (switchTheme.isChecked) {
-            themeManager.setDarkTheme(this)
+            themeManager.setDarkTheme()
         } else {
-            themeManager.setLightTheme(this)
+            themeManager.setLightTheme()
         }
     }
 
     override fun onResume() {
         super.onResume()
         if (themeManager.getSavedTheme(this)) {
-            themeManager.setDarkTheme(this)
+            themeManager.setDarkTheme()
             switchTheme.isChecked = true
         } else {
-            themeManager.setLightTheme(this)
+            themeManager.setLightTheme()
             switchTheme.isChecked = false
         }
     }

@@ -1,24 +1,14 @@
 package com.example.test_task
 
 import com.example.test_task.retrofit.User
-import com.example.test_task.retrofit.UsersApi
-import com.github.javafaker.Faker
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Collections
-import java.util.Locale
 
 
 class PersonList {
     private var persons = mutableListOf<Person>()
     var isLoaded = false
 
-    fun addPersons(personsResponse:List<User>) {
+    fun addPersons(personsResponse: List<User>) {
         persons = personsResponse.map { user ->
             Person(
                 id = user.id,
@@ -30,21 +20,21 @@ class PersonList {
         }.toMutableList()
         isLoaded = true
     }
-/*    init {
+    /*    init {
 
-        val faker = Faker(Locale("ru"))
+            val faker = Faker(Locale("ru"))
 
-        persons = (1..100).map {
-            Person(
-                id = it,
-                firstname = faker.name().firstName(),
-                lastname = faker.name().lastName(),
-                company = faker.company().name(),
-                img = SRC[it % SRC.size],
-            )
-        }.toMutableList()
+            persons = (1..100).map {
+                Person(
+                    id = it,
+                    firstname = faker.name().firstName(),
+                    lastname = faker.name().lastName(),
+                    company = faker.company().name(),
+                    img = SRC[it % SRC.size],
+                )
+            }.toMutableList()
 
-        }*/
+            }*/
 
     fun getPersons(): List<Person> = persons
 
@@ -56,12 +46,14 @@ class PersonList {
             "https://get.wallhere.com/photo/face-cat-Asian-wildlife-fur-nose-kittens-whiskers-wild-cat-Iris-eye-cats-kitten-fauna-mammal-organ-close-up-cat-like-mammal-macro-photography-snout-small-to-medium-sized-cats-carnivoran-tabby-cat-domestic-short-haired-cat-bengal-somali-puss-1152x804-px-lovely-desktop-images-cat-images-cat-photos-cat-wallpapers-cutties-feline-pictures-on-the-wall-pussycats-aegean-cat-802659.jpg"
         )
     }
+
     fun removePerson(person: Person) {
         val position = persons.indexOfFirst { it.id == person.id }
         if (position == -1) return
         persons.removeAt(position)
         notifyChanges()
     }
+
     fun movePerson(person: Person, moveBy: Int) {
         val oldPosition = persons.indexOfFirst { it.id == person.id }
         if (oldPosition == -1) return
@@ -69,6 +61,7 @@ class PersonList {
         Collections.swap(persons, oldPosition, newPosition)
         notifyChanges()
     }
+
     private var listeners = mutableListOf<PersonListener>() // Все слушатели
 
     fun addListener(listener: PersonListener) {
