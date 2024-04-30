@@ -16,6 +16,7 @@ import java.util.Locale
 
 class PersonList {
     private var persons = mutableListOf<Person>()
+    var isLoaded = false
 
     fun addPersons(personsResponse:List<User>) {
         persons = personsResponse.map { user ->
@@ -27,6 +28,7 @@ class PersonList {
                 img = user.image
             )
         }.toMutableList()
+        isLoaded = true
     }
 /*    init {
 
