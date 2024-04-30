@@ -1,6 +1,7 @@
 package com.example.test_task.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -30,8 +31,7 @@ class ListFragment : Fragment() {
     private lateinit var adapter: PersonAdapter
     private lateinit var binding: FragmentListBinding
 
-    private val personList: PersonList
-        get() = (requireActivity().application as App).personList
+    private lateinit var personList: PersonList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -41,6 +41,7 @@ class ListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentListBinding.inflate(inflater, container, false)
+        personList = (requireActivity().application as App).personList
         return binding.root
     }
 
@@ -94,7 +95,11 @@ class ListFragment : Fragment() {
                 personList.movePerson(person, moveBy)
         })
         personList.addListener(listener)
-        binding.recyclerView.layoutManager = LinearLayoutManager(this@ListFragment.requireActivity())
+        try {
+            binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        } catch (e: Exception) {
+            Log.e("RecyclerView", e.toString())
+        }
         binding.recyclerView.adapter = adapter
         binding.progressBar.visibility = View.GONE
         binding.recyclerView.visibility = View.VISIBLE
