@@ -21,6 +21,7 @@ import com.example.test_task.ThemeManager
 import com.example.test_task.databinding.FragmentListBinding
 import com.example.test_task.retrofit.RetrofitClient
 import com.example.test_task.retrofit.UsersApi
+import com.example.test_task.room.MainDb
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,6 +46,7 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyTheme()
+
         if (!personList.isLoaded) {
             binding.progressBar.visibility = View.VISIBLE
             binding.recyclerView.visibility = View.GONE
@@ -56,10 +58,11 @@ class ListFragment : Fragment() {
 
     private val listener: PersonListener = { adapter.data = it }
     private fun takingFromApi() {
+        val db = MainDb.getDb(requireContext())
         val usersAPI = RetrofitClient.getInstance().create(UsersApi::class.java)
         CoroutineScope(Dispatchers.IO).launch {
             val response = usersAPI.getPersons(
-                100, "firstName,lastName,image,company,id"
+                100, "firstName,lastName,image,company"
             )
             withContext(Dispatchers.Main) {
                 val personsResponse = response.users

@@ -7,12 +7,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.test_task.databinding.ActivityMainBinding
 
-
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var switchTheme: SwitchCompat
     private val themeManager = ThemeManager()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +26,6 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.listFragment)
 
                 }
-
                 R.id.page_2 -> {
                     navController.navigate(R.id.postFragment)
                 }
@@ -63,6 +60,4 @@ class MainActivity : AppCompatActivity() {
             switchTheme.isChecked = false
         }
     }
-
-
 }

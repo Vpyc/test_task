@@ -20,22 +20,6 @@ class PersonList {
         }.toMutableList()
         isLoaded = true
     }
-    /*    init {
-
-            val faker = Faker(Locale("ru"))
-
-            persons = (1..100).map {
-                Person(
-                    id = it,
-                    firstname = faker.name().firstName(),
-                    lastname = faker.name().lastName(),
-                    company = faker.company().name(),
-                    img = SRC[it % SRC.size],
-                )
-            }.toMutableList()
-
-            }*/
-
     fun getPersons(): List<Person> = persons
 
     companion object {

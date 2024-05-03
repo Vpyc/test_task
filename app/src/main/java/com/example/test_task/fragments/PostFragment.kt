@@ -56,7 +56,7 @@ class PostFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 Toast.makeText(
                     this@PostFragment.requireActivity(),
-                    "${response.id}",
+                    "ID in API: ${response.id}",
                     Toast.LENGTH_SHORT
                 ).show()
             }
