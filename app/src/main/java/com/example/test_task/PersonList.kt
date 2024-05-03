@@ -46,13 +46,10 @@ class PersonList {
         Collections.swap(persons, oldPosition, newPosition)
         notifyChanges()
     }
-
     private var listeners = mutableListOf<PersonListener>() // Все слушатели
-
     fun addListener(listener: PersonListener) {
         listeners.add(listener)
         listener.invoke(persons)
-
     }
 
     fun removeListener(listener: PersonListener) {

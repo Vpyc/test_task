@@ -11,21 +11,23 @@ class PersonRepository(private val mainDb: MainDb, private val usersApi: UsersAp
     private val companyDao = mainDb.getCompanyDao()
     suspend fun fetchDataAndSaveToDb() {
         val response = usersApi.getPersons(
-            100, "firstName,lastName,image,company"
+            100, "firstName,lastName,image,company,id"
         )
 
-        val companies = response.users.map { it.company }
-        companies.forEach { company ->
-            companyDao.insertCompany(CompanyEntity(companyName = company.name))
+        response.users.forEach { user ->
+            val company = companyDao.getCompanyByName(user.company.name)
+            if (company == null) {
+                companyDao.insertCompany(CompanyEntity(companyName = user.company.name))
+            }
         }
 
         // Сохранение пользователей в базу данных
         val persons = response.users.map { user ->
             PersonEntity(
+                id = user.id.toLong(),
                 firstName = user.firstName,
                 lastName = user.lastName,
-                companyId = companyDao.getAllCompanies()
-                    .firstOrNull { it.companyName == user.company.name }?.id ?: 0,
+                companyId = companyDao.getCompanyByName(user.company.name)?.id ?: 0,
                 img = user.image
             )
         }

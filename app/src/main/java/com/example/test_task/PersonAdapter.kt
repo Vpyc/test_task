@@ -86,7 +86,6 @@ class PersonAdapter(private val personActionListener: PersonActionListener) :
             }
             return@setOnMenuItemClickListener true
         }
-
         popupMenu.show()
     }
 

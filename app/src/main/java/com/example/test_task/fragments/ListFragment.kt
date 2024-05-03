@@ -57,6 +57,12 @@ class ListFragment : Fragment() {
         } else {
             initRecyclerView()
         }
+        binding.refreshonswipe.setOnRefreshListener{
+            binding.progressBar.visibility = View.VISIBLE
+            binding.recyclerView.visibility = View.GONE
+            takingFromApi()
+            binding.refreshonswipe.isRefreshing = false
+        }
     }
 
     private val listener: PersonListener = { adapter.data = it }

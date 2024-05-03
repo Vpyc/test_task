@@ -2,11 +2,13 @@ package com.example.test_task.room
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
 interface PersonDao {
-    @Insert(entity = PersonEntity::class)
+    @Insert(entity = PersonEntity::class,
+        onConflict = OnConflictStrategy.REPLACE)
     fun insertPerson(person: PersonEntity)
 
     @Query(
@@ -18,9 +20,12 @@ interface PersonDao {
 
 @Dao
 interface CompanyDao {
-    @Insert(entity = CompanyEntity::class)
+    @Insert(entity = CompanyEntity::class,
+            onConflict = OnConflictStrategy.REPLACE)
     fun insertCompany(company: CompanyEntity)
 
     @Query("SELECT * FROM company")
     fun getAllCompanies(): List<CompanyEntity>
+    @Query("SELECT * FROM company WHERE company_name = :companyName")
+    suspend fun getCompanyByName(companyName: String): CompanyEntity?
 }
