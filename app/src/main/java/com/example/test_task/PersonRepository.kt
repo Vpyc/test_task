@@ -6,10 +6,10 @@ import com.example.test_task.room.MainDb
 import com.example.test_task.room.PersonEntity
 import com.example.test_task.room.PersonInfo
 
-class PersonRepository(private val mainDb: MainDb, private val usersApi: UsersApi) {
+class PersonRepository(private val mainDb: MainDb) {
     private val personDao = mainDb.getPersonDao()
     private val companyDao = mainDb.getCompanyDao()
-    suspend fun fetchDataAndSaveToDb() {
+    suspend fun fetchDataAndSaveToDb(usersApi: UsersApi) {
         val response = usersApi.getPersons(
             100, "firstName,lastName,image,company,id"
         )
@@ -35,7 +35,9 @@ class PersonRepository(private val mainDb: MainDb, private val usersApi: UsersAp
             personDao.insertPerson(person)
         }
     }
-
+    suspend fun deletePerson(personId: Long) {
+        personDao.deletePersonById(personId)
+    }
     fun getAllPersons(): List<PersonInfo> {
         return personDao.getAllPersonsWithCompany()
     }

@@ -35,6 +35,7 @@ class ListFragment : Fragment() {
 
     private lateinit var personList: PersonList
     private lateinit var db: MainDb
+    private lateinit var personRepository: PersonRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +44,7 @@ class ListFragment : Fragment() {
         binding = FragmentListBinding.inflate(inflater, container, false)
         personList = (requireActivity().application as App).personList
         db = MainDb.getDb(requireContext())
+        personRepository = PersonRepository(db)
         return binding.root
     }
 
@@ -69,8 +71,7 @@ class ListFragment : Fragment() {
     private fun takingFromApi() {
         val usersApi = RetrofitClient.getInstance().create(UsersApi::class.java)
         CoroutineScope(Dispatchers.IO).launch {
-            val personRepository = PersonRepository(db, usersApi)
-            personRepository.fetchDataAndSaveToDb()
+            personRepository.fetchDataAndSaveToDb(usersApi)
             val personsDb = personRepository.getAllPersons()
             withContext(Dispatchers.Main) {
                 personList.addPersons(personsDb)
@@ -96,8 +97,12 @@ class ListFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
 
-            override fun onPersonRemove(person: Person) =
+            override fun onPersonRemove(person: Person) {
                 personList.removePerson(person)
+                CoroutineScope(Dispatchers.Main).launch{
+                    personRepository.deletePerson(person.id)
+                }
+            }
 
             override fun onPersonMove(person: Person, moveBy: Int) =
                 personList.movePerson(person, moveBy)
