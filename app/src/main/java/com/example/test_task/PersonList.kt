@@ -1,6 +1,6 @@
 package com.example.test_task
 
-import com.example.test_task.retrofit.User
+import com.example.test_task.room.PersonInfo
 import java.util.Collections
 
 
@@ -8,18 +8,19 @@ class PersonList {
     private var persons = mutableListOf<Person>()
     var isLoaded = false
 
-    fun addPersons(personsResponse: List<User>) {
-        persons = personsResponse.map { user ->
+    fun addPersons(personsDb: List<PersonInfo>) {
+        persons = personsDb.map { user ->
             Person(
                 id = user.id,
                 firstname = user.firstName,
                 lastname = user.lastName,
-                company = user.company.name,
-                img = user.image
+                company = user.companyName,
+                img = user.img
             )
         }.toMutableList()
         isLoaded = true
     }
+
     fun getPersons(): List<Person> = persons
 
     companion object {

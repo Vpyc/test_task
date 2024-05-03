@@ -9,12 +9,16 @@ import androidx.room.RoomDatabase
     entities = [
         PersonEntity::class,
         CompanyEntity::class],
-    version = 1)
-abstract class MainDb: RoomDatabase(){
-    abstract fun getDao(): Dao
+    version = 1
+)
+abstract class MainDb : RoomDatabase() {
+    abstract fun getPersonDao(): PersonDao
+    abstract fun getCompanyDao(): CompanyDao
+
+
     companion object {
 
-        fun getDb(context: Context) : MainDb{
+        fun getDb(context: Context): MainDb {
             return Room.databaseBuilder(
                 context.applicationContext,
                 MainDb::class.java,

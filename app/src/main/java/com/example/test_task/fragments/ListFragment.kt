@@ -16,6 +16,7 @@ import com.example.test_task.PersonActionListener
 import com.example.test_task.PersonAdapter
 import com.example.test_task.PersonList
 import com.example.test_task.PersonListener
+import com.example.test_task.PersonRepository
 import com.example.test_task.R
 import com.example.test_task.ThemeManager
 import com.example.test_task.databinding.FragmentListBinding
@@ -33,6 +34,7 @@ class ListFragment : Fragment() {
     private lateinit var binding: FragmentListBinding
 
     private lateinit var personList: PersonList
+    private lateinit var db: MainDb
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +42,7 @@ class ListFragment : Fragment() {
     ): View {
         binding = FragmentListBinding.inflate(inflater, container, false)
         personList = (requireActivity().application as App).personList
+        db = MainDb.getDb(requireContext())
         return binding.root
     }
 
@@ -58,15 +61,13 @@ class ListFragment : Fragment() {
 
     private val listener: PersonListener = { adapter.data = it }
     private fun takingFromApi() {
-        val db = MainDb.getDb(requireContext())
-        val usersAPI = RetrofitClient.getInstance().create(UsersApi::class.java)
+        val usersApi = RetrofitClient.getInstance().create(UsersApi::class.java)
         CoroutineScope(Dispatchers.IO).launch {
-            val response = usersAPI.getPersons(
-                100, "firstName,lastName,image,company"
-            )
+            val personRepository = PersonRepository(db, usersApi)
+            personRepository.fetchDataAndSaveToDb()
+            val personsDb = personRepository.getAllPersons()
             withContext(Dispatchers.Main) {
-                val personsResponse = response.users
-                personList.addPersons(personsResponse)
+                personList.addPersons(personsDb)
                 initRecyclerView()
             }
         }

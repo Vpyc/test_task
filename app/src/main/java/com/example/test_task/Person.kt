@@ -1,7 +1,7 @@
 package com.example.test_task
 
 data class Person(
-    val id: Int,
+    val id: Long,
     val firstname: String,
     val lastname: String,
     val company: String,
